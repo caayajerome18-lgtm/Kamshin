@@ -1,0 +1,3 @@
+"Ticket No.","License Plate","Vehicle Type","Entry Type","Employee Name","Employee ID",Department,"Time In","Time Out","Duration (mins)",Zone,Slot,Status,Guard
+TKT-20260418-C63DE,"ND 1234",Car,Visitor,Visitor,-,-,"2026-04-18 12:17:58",-,-,-,-,Parked,"System Administrator"
+TKT-20260418-4699D,"NGB 1245",Car,Visitor,Visitor,-,-,"2026-04-18 12:53:34",-,-,-,-,Parked,"System Administrator"

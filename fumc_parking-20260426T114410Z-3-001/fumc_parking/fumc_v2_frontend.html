@@ -1,0 +1,681 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>FUMC Parking Ticketing System</title>
+<link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600;700&family=Barlow+Condensed:wght@600;700;800&display=swap" rel="stylesheet"/>
+<style>
+:root{--gd:#1a4731;--gm:#1d6b44;--gmi:#2d8a5a;--gl:#e8f5ee;--ga:#34c770;--rd:#c0392b;--rl:#fdecea;--am:#d4830a;--al:#fef3e2;--bl:#1a5fa8;--bll:#e8f0fb;--w:#fff;--g50:#f7f9f8;--g100:#f0f4f2;--g200:#dde6e1;--g400:#8aaa99;--g600:#4a6358;--g800:#1e2d27;--sh:0 2px 16px rgba(0,0,0,.09);--shl:0 8px 40px rgba(0,0,0,.15);--r:10px;--rl2:16px;}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:'Barlow',sans-serif;background:var(--g100);color:var(--g800);min-height:100vh;}
+.topbar{background:var(--gd);color:white;display:flex;align-items:center;justify-content:space-between;padding:0 22px;height:58px;position:fixed;top:0;left:0;right:0;z-index:100;box-shadow:0 2px 12px rgba(0,0,0,.3);}
+.tl{display:flex;align-items:center;gap:12px;}
+.lw{width:36px;height:36px;background:white;border-radius:50%;display:flex;align-items:center;justify-content:center;}
+.br{font-family:'Barlow Condensed',sans-serif;font-size:18px;font-weight:800;letter-spacing:1px;}
+.bd{width:1px;height:22px;background:rgba(255,255,255,.25);}
+.bs{font-size:11px;color:rgba(255,255,255,.7);font-weight:500;}
+.tr{display:flex;align-items:center;gap:14px;}
+.ck{text-align:right;}
+.ckt{font-family:'Barlow Condensed',sans-serif;font-size:20px;font-weight:700;line-height:1;}
+.ckd{font-size:10px;color:rgba(255,255,255,.6);text-transform:uppercase;letter-spacing:.4px;}
+.gp{display:flex;align-items:center;gap:8px;background:rgba(255,255,255,.1);border-radius:40px;padding:4px 12px 4px 4px;}
+.gav{width:28px;height:28px;background:var(--ga);border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:11px;color:var(--gd);}
+.gnm{font-size:12px;font-weight:600;}
+.blog{background:rgba(192,57,43,.85);border:none;color:white;padding:6px 13px;border-radius:6px;font-family:'Barlow',sans-serif;font-size:12px;font-weight:700;cursor:pointer;transition:.2s;}
+.blog:hover{background:var(--rd);}
+.sidebar{position:fixed;top:58px;left:0;bottom:0;width:148px;background:var(--gd);padding:12px 0;display:flex;flex-direction:column;gap:2px;z-index:99;overflow-y:auto;}
+.ni{display:flex;flex-direction:column;align-items:center;gap:4px;padding:12px 6px;cursor:pointer;color:rgba(255,255,255,.55);font-size:10px;font-weight:700;text-align:center;letter-spacing:.4px;text-transform:uppercase;transition:all .2s;border-left:3px solid transparent;}
+.ni:hover{color:white;background:rgba(255,255,255,.07);}
+.ni.active{color:var(--ga);background:rgba(52,199,112,.1);border-left-color:var(--ga);}
+.ni svg{width:19px;height:19px;}
+.nsep{height:1px;background:rgba(255,255,255,.1);margin:6px 14px;}
+.main{margin-top:58px;margin-left:148px;padding:22px;min-height:calc(100vh - 58px);padding-bottom:38px;}
+.page{display:none;animation:fi .22s ease;}
+.page.active{display:block;}
+@keyframes fi{from{opacity:0;transform:translateY(7px);}to{opacity:1;transform:translateY(0);}}
+#lp{position:fixed;inset:0;background:var(--gd);display:flex;align-items:center;justify-content:center;z-index:200;}
+#lp.hidden{display:none;}
+.lc{background:white;border-radius:var(--rl2);padding:42px 38px;width:100%;max-width:390px;box-shadow:var(--shl);animation:fi .4s ease;}
+.ll{display:flex;align-items:center;justify-content:center;gap:12px;margin-bottom:6px;}
+.llc{width:54px;height:54px;background:var(--gm);border-radius:50%;display:flex;align-items:center;justify-content:center;}
+.lb{font-family:'Barlow Condensed',sans-serif;font-size:25px;font-weight:800;color:var(--gd);line-height:1;}
+.lb span{display:block;font-size:10px;font-weight:500;color:var(--g400);letter-spacing:2px;text-transform:uppercase;margin-top:2px;}
+.lsub{text-align:center;font-size:12px;color:var(--g400);margin-bottom:26px;font-weight:500;}
+.fl{display:block;font-size:11px;font-weight:700;color:var(--g600);text-transform:uppercase;letter-spacing:.5px;margin-bottom:5px;}
+.fi2{width:100%;padding:10px 13px;border:1.5px solid var(--g200);border-radius:var(--r);font-family:'Barlow',sans-serif;font-size:14px;color:var(--g800);transition:.2s;outline:none;}
+.fi2:focus{border-color:var(--gmi);box-shadow:0 0 0 3px rgba(29,107,68,.1);}
+.fg{margin-bottom:14px;}
+.bln{width:100%;padding:12px;background:var(--gm);color:white;border:none;border-radius:var(--r);font-family:'Barlow Condensed',sans-serif;font-size:16px;font-weight:800;letter-spacing:1px;cursor:pointer;margin-top:6px;transition:.2s;}
+.bln:hover{background:var(--gd);}
+.lerr{background:var(--rl);color:var(--rd);border-radius:8px;padding:9px 12px;font-size:13px;font-weight:500;margin-bottom:12px;display:none;}
+.lft{text-align:center;margin-top:18px;font-size:11px;color:var(--g400);}
+.ph{margin-bottom:18px;}
+.pt{font-family:'Barlow Condensed',sans-serif;font-size:25px;font-weight:800;color:var(--gd);letter-spacing:.3px;}
+.ps{font-size:12px;color:var(--g400);margin-top:1px;}
+.card{background:white;border-radius:var(--rl2);box-shadow:var(--sh);padding:20px;}
+.st{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--g400);margin-bottom:11px;padding-bottom:7px;border-bottom:1px solid var(--g200);}
+.tc2{display:grid;grid-template-columns:1fr 350px;gap:16px;}
+.te2{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+.sc{background:white;border-radius:var(--rl2);padding:16px 18px;box-shadow:var(--sh);border-left:4px solid var(--gmi);}
+.sc.rd{border-left-color:var(--rd);}
+.sc.am{border-left-color:var(--am);}
+.sc.bl{border-left-color:var(--bl);}
+.sl{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--g400);margin-bottom:5px;}
+.sv{font-family:'Barlow Condensed',sans-serif;font-size:32px;font-weight:800;color:var(--gd);line-height:1;}
+.sc.rd .sv{color:var(--rd);}
+.sc.am .sv{color:var(--am);}
+.sc.bl .sv{color:var(--bl);}
+.pi{width:100%;text-align:center;font-family:'Barlow Condensed',sans-serif;font-size:38px;font-weight:800;letter-spacing:4px;border:2px solid var(--g200);border-radius:10px;padding:9px 18px;text-transform:uppercase;outline:none;transition:.2s;}
+.pi:focus{border-color:var(--gmi);box-shadow:0 0 0 3px rgba(29,107,68,.1);}
+.fs{width:100%;padding:10px 12px;border:1.5px solid var(--g200);border-radius:var(--r);font-family:'Barlow',sans-serif;font-size:14px;color:var(--g800);outline:none;background:white;cursor:pointer;}
+.fs:focus{border-color:var(--gmi);}
+.ins{padding:9px 12px;border:1.5px solid var(--g200);border-radius:var(--r);font-family:'Barlow',sans-serif;font-size:14px;outline:none;transition:.2s;width:100%;}
+.ins:focus{border-color:var(--gmi);}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:7px;padding:11px 20px;border-radius:var(--r);font-family:'Barlow Condensed',sans-serif;font-size:15px;font-weight:700;letter-spacing:.5px;cursor:pointer;border:none;transition:.2s;}
+.bp{background:var(--gm);color:white;width:100%;font-size:16px;padding:14px;}
+.bp:hover{background:var(--gd);}
+.bda{background:var(--rd);color:white;padding:14px 26px;}
+.bda:hover{background:#a93226;}
+.bo{background:transparent;color:var(--g600);border:1.5px solid var(--g200);}
+.bo:hover{background:var(--g100);}
+.bam{background:var(--am);color:white;}
+.bam:hover{background:#b36d07;}
+.bbl{background:var(--bl);color:white;}
+.bbl:hover{background:#154d8a;}
+.br2{display:flex;gap:10px;margin-top:14px;}
+.bsm{padding:7px 14px;font-size:12px;}
+.tnb{background:var(--gl);border:2px solid var(--gmi);border-radius:var(--r);padding:12px 18px;text-align:center;margin-bottom:12px;}
+.tnl{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--gmi);margin-bottom:3px;}
+.tnv{font-family:'Barlow Condensed',sans-serif;font-size:30px;font-weight:800;color:var(--gd);letter-spacing:2px;}
+.tb{background:var(--g50);border-radius:var(--r);padding:12px 16px;margin-bottom:10px;}
+.tr2{display:flex;justify-content:space-between;align-items:center;padding:5px 0;border-bottom:1px solid var(--g200);}
+.tr2:last-child{border-bottom:none;}
+.trl{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.4px;color:var(--g400);}
+.trv{font-family:'Barlow Condensed',sans-serif;font-size:17px;font-weight:700;color:var(--g800);}
+.trv.lv{color:var(--gmi);animation:bl 1s infinite;}
+@keyframes bl{0%,100%{opacity:1;}50%{opacity:.7;}}
+.db{background:var(--gd);color:white;border-radius:var(--r);padding:16px;text-align:center;margin-bottom:10px;}
+.dbl{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:rgba(255,255,255,.6);margin-bottom:5px;}
+.dbv{font-family:'Barlow Condensed',sans-serif;font-size:36px;font-weight:800;color:var(--ga);line-height:1;}
+.dbu{font-size:15px;color:white;}
+.pb{background:var(--al);border:2px solid var(--am);border-radius:var(--r);padding:16px;margin-bottom:10px;}
+.pbl{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--am);margin-bottom:6px;}
+.pba{font-family:'Barlow Condensed',sans-serif;font-size:42px;font-weight:800;color:var(--am);line-height:1;}
+.pbk{font-size:12px;color:var(--g600);margin-top:5px;}
+.pbd{background:var(--bll);border:1px solid var(--bl);border-radius:6px;padding:7px 11px;margin-top:7px;font-size:12px;color:var(--bl);font-weight:600;}
+.rb{border:2px dashed var(--g200);border-radius:var(--r);padding:18px;background:white;}
+.rt{font-family:'Barlow Condensed',sans-serif;font-size:17px;font-weight:800;color:var(--gd);text-align:center;margin-bottom:10px;letter-spacing:1px;}
+.rr{display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px solid var(--g100);font-size:12px;}
+.rr:last-child{border-bottom:none;font-weight:700;font-size:13px;}
+.rtot{background:var(--gd);color:white;border-radius:7px;padding:10px 14px;margin-top:9px;display:flex;justify-content:space-between;align-items:center;}
+.rtotl{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;}
+.rtota{font-family:'Barlow Condensed',sans-serif;font-size:26px;font-weight:800;color:var(--ga);}
+.ec{display:flex;align-items:center;gap:12px;background:var(--gl);border:1.5px solid var(--gmi);border-radius:var(--r);padding:12px;margin-bottom:12px;}
+.eav{width:48px;height:48px;border-radius:50%;background:var(--gmi);display:flex;align-items:center;justify-content:center;font-family:'Barlow Condensed',sans-serif;font-size:18px;font-weight:800;color:white;flex-shrink:0;}
+.en{font-size:15px;font-weight:700;color:var(--gd);}
+.ei{font-size:12px;color:var(--g600);margin-top:1px;}
+.badge{display:inline-block;padding:3px 9px;border-radius:20px;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.4px;}
+.bg{background:var(--gl);color:var(--gmi);}
+.bgr{background:var(--g200);color:var(--g600);}
+.bam2{background:var(--al);color:var(--am);}
+.bbl2{background:var(--bll);color:var(--bl);}
+.brd{background:var(--rl);color:var(--rd);}
+.al2{border-radius:var(--r);padding:9px 13px;font-size:13px;font-weight:500;margin-bottom:10px;display:none;}
+.al2.ok{background:var(--gl);color:var(--gd);border:1px solid var(--gmi);}
+.al2.er{background:var(--rl);color:var(--rd);border:1px solid var(--rd);}
+.mov{position:fixed;inset:0;background:rgba(0,0,0,.6);display:none;align-items:center;justify-content:center;z-index:300;}
+.mov.show{display:flex;}
+.mo{background:white;border-radius:var(--rl2);padding:28px;width:100%;max-width:410px;animation:fi .3s ease;}
+.mot{font-family:'Barlow Condensed',sans-serif;font-size:21px;font-weight:800;color:var(--gd);margin-bottom:14px;}
+.mic{width:52px;height:52px;border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 12px;}
+.mic.gn{background:var(--gl);}
+.tbl2{width:100%;border-collapse:collapse;font-size:12px;}
+.tbl2 th{text-align:left;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--g400);padding:7px 10px;border-bottom:1px solid var(--g200);}
+.tbl2 td{padding:9px 10px;border-bottom:1px solid var(--g100);}
+.tbl2 tr:last-child td{border-bottom:none;}
+.tbl2 tr:hover td{background:var(--g50);}
+.sb{position:fixed;bottom:0;left:148px;right:0;background:var(--gd);color:rgba(255,255,255,.7);font-size:11px;padding:6px 18px;display:flex;gap:18px;align-items:center;z-index:99;}
+.sd{width:6px;height:6px;border-radius:50%;background:var(--ga);display:inline-block;margin-right:4px;animation:bl 1.5s infinite;}
+.sp{display:inline-block;width:15px;height:15px;border:2px solid rgba(255,255,255,.3);border-top-color:white;border-radius:50%;animation:spin .7s linear infinite;margin-right:5px;}
+@keyframes spin{to{transform:rotate(360deg);}}
+</style>
+</head>
+<body>
+
+<!-- LOGIN -->
+<div id="lp">
+  <div class="lc">
+    <div class="ll">
+      <div class="llc"><svg width="34" height="34" viewBox="0 0 60 60" fill="none"><circle cx="30" cy="30" r="28" fill="white"/><rect x="24" y="10" width="12" height="40" rx="3" fill="#1d6b44"/><rect x="10" y="24" width="40" height="12" rx="3" fill="#1d6b44"/><circle cx="30" cy="30" r="6" fill="#1d6b44"/></svg></div>
+      <div class="lb">FUMC <span>Fatima University Medical Center</span></div>
+    </div>
+    <p class="lsub">Parking Ticketing System — Guard / Admin Portal</p>
+    <div class="lerr" id="lerr">Invalid username or password.</div>
+    <div class="fg"><label class="fl">Username</label><input class="fi2" id="iu" placeholder="Enter username" autocomplete="off"/></div>
+    <div class="fg"><label class="fl">Password</label><input class="fi2" type="password" id="ip" placeholder="Enter password"/></div>
+    <button class="bln" id="bln" onclick="doLogin()">SIGN IN</button>
+    <div class="lft">FUMC IT Dept. · Parking Ticketing System v2.0</div>
+  </div>
+</div>
+
+<!-- APP -->
+<div id="app" style="display:none;">
+<div class="topbar">
+  <div class="tl">
+    <div class="lw"><svg width="24" height="24" viewBox="0 0 60 60" fill="none"><circle cx="30" cy="30" r="28" fill="#1d6b44"/><rect x="24" y="10" width="12" height="40" rx="3" fill="white"/><rect x="10" y="24" width="40" height="12" rx="3" fill="white"/><circle cx="30" cy="30" r="6" fill="#1d6b44"/></svg></div>
+    <span class="br">FUMC</span><div class="bd"></div><span class="bs">Parking Ticketing System</span>
+  </div>
+  <div class="tr">
+    <div class="ck"><div class="ckt" id="ckt">--:-- --</div><div class="ckd" id="ckd">Loading...</div></div>
+    <div class="gp"><div class="gav" id="gav">G</div><span class="gnm" id="gnm">Guard</span></div>
+    <button class="blog" onclick="doLogout()">Log Out</button>
+  </div>
+</div>
+
+<div class="sidebar">
+  <div class="ni active" id="nav-visitor" onclick="showPage('visitor')">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="3" width="15" height="13" rx="2"/><path d="M16 8h4l3 3v5h-7V8z"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
+    Time In<br/>Non-Emp
+  </div>
+  <div class="ni" id="nav-employee" onclick="showPage('employee')">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+    Time In<br/>Employee
+  </div>
+  <div class="nsep"></div>
+  <div class="ni" id="nav-receipt" onclick="showPage('receipt')">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><path d="M14 2v6h6M16 13H8M16 17H8M10 9H8"/></svg>
+    Receipt &<br/>Payment
+  </div>
+  <div class="nsep"></div>
+  <div class="ni" id="nav-vehicles" onclick="showPage('vehicles')">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
+    Info Sheet<br/>Vehicles
+  </div>
+  <div class="ni" id="nav-excel" onclick="showPage('excel')">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><path d="M14 2v6h6"/><path d="M8 13l2 2 4-4"/></svg>
+    Excel<br/>Report
+  </div>
+  <div class="ni" id="nav-empinfo" onclick="showPage('empinfo')">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg>
+    Employee<br/>Parking
+  </div>
+  <div class="nsep"></div>
+  <div class="ni" id="nav-admin" onclick="showPage('admin')">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.07 4.93l-1.41 1.41M4.93 4.93l1.41 1.41M12 2v2M12 20v2M2 12h2M20 12h2M19.07 19.07l-1.41-1.41M4.93 19.07l1.41-1.41"/></svg>
+    Admin<br/>Panel
+  </div>
+</div>
+
+<div class="main">
+
+<!-- VISITOR TIME IN -->
+<div class="page active" id="page-visitor">
+  <div class="ph"><div class="pt">Time In — Non-Employee / Visitor</div><div class="ps">Record visitor entry and generate ticket · ₱30 first hour + ₱20 succeeding</div></div>
+  <div class="tc2">
+    <div>
+      <div class="card">
+        <div class="st">New Ticket Entry</div>
+        <div class="tnb"><div class="tnl">Ticket No (Auto-Generated)</div><div class="tnv" id="vtp">TKT---------</div></div>
+        <div class="fg"><label class="fl">Plate Number / MV File (if no plate available)</label><input class="pi" id="vpl" placeholder="ABC 1234" maxlength="15" oninput="this.value=this.value.toUpperCase()"/></div>
+        <div class="te2" style="margin-top:12px;">
+          <div class="fg"><label class="fl">Vehicle Type</label><select class="fs" id="vvt"><option>Car</option><option>SUV</option><option>Motorcycle</option><option>Truck</option><option>Van</option></select></div>
+          <div class="fg"><label class="fl">Time In (Real-time)</label><div class="trv lv" id="vtil" style="font-size:15px;padding:10px 0;">--:--:--</div></div>
+        </div>
+        <div class="al2 ok" id="vok"></div><div class="al2 er" id="ver"></div>
+        <div class="br2">
+          <button class="btn bp" onclick="submitVisitor()"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12l5 5L20 7"/></svg>SUBMIT TICKET</button>
+          <button class="btn bda" onclick="clearV()">CANCEL</button>
+        </div>
+      </div>
+    </div>
+    <div>
+      <div class="card">
+        <div class="st">Search by Ticket No</div>
+        <div style="display:flex;gap:9px;margin-bottom:13px;"><input class="ins" id="vst" placeholder="Enter Ticket No..." style="flex:1;"/><button class="btn bo bsm" onclick="searchTicket()">Search</button></div>
+        <div id="vsr"><div style="text-align:center;color:var(--g400);padding:28px 0;font-size:12px;">Enter ticket number to search</div></div>
+      </div>
+      <div class="card" id="vtoc" style="margin-top:13px;display:none;">
+        <div class="st">Time Out</div>
+        <div id="vfi"></div>
+        <div class="fg" style="margin-top:10px;">
+          <label class="fl">Discount Applicable For</label>
+          <div style="display:flex;gap:14px;align-items:center;flex-wrap:wrap;margin-bottom:8px;">
+            <label style="display:flex;align-items:center;gap:5px;font-size:13px;cursor:pointer;"><input type="checkbox" id="vpwd" onchange="recalcPay()"/> PWD (20% off)</label>
+            <label style="display:flex;align-items:center;gap:5px;font-size:13px;cursor:pointer;"><input type="checkbox" id="vsen" onchange="recalcPay()"/> Senior Citizen (20% off)</label>
+          </div>
+          <input class="ins" id="vdid" placeholder="ID Number (PWD / Senior)"/>
+        </div>
+        <div id="vpaypreview"></div>
+        <div class="br2"><button class="btn bp" onclick="submitVisitorOut()"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12l5 5L20 7"/></svg>SUBMIT TIME OUT</button></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- EMPLOYEE TIME IN -->
+<div class="page" id="page-employee">
+  <div class="ph"><div class="pt">Time In — Employee</div><div class="ps">Record employee vehicle entry · ₱30 first hour + ₱20 succeeding</div></div>
+  <div class="tc2">
+    <div class="card">
+      <div class="st">Vehicle Info</div>
+      <div class="fg"><label class="fl">Plate Number / MV File</label><input class="pi" id="epl" placeholder="ABC 1234" maxlength="15" oninput="this.value=this.value.toUpperCase()"/></div>
+      <div class="te2" style="margin-top:12px;">
+        <div class="fg"><label class="fl">Vehicle Type</label><select class="fs" id="evt"><option>Car</option><option>SUV</option><option>Motorcycle</option><option>Truck</option><option>Van</option></select></div>
+        <div class="fg"><label class="fl">Employee DB ID</label><input class="ins" id="eeid" type="number" placeholder="Employee ID no."/></div>
+      </div>
+      <div class="tb">
+        <div class="tr2"><span class="trl">Time In (Real-time)</span><span class="trv lv" id="etil">--:--:--</span></div>
+        <div class="tr2"><span class="trl">Date</span><span class="trv" id="edl">--/--/----</span></div>
+      </div>
+      <div class="al2 ok" id="eok"></div><div class="al2 er" id="eer"></div>
+      <div class="br2">
+        <button class="btn bp" onclick="submitEmployee()"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12l5 5L20 7"/></svg>SUBMIT TICKET</button>
+        <button class="btn bda" onclick="clearE()">CANCEL</button>
+      </div>
+    </div>
+    <div>
+      <div class="card">
+        <div class="st">Employee Info &amp; ID Number</div>
+        <div style="display:flex;gap:9px;margin-bottom:13px;"><input class="ins" id="esp" placeholder="Search by plate number..." style="flex:1;"/><button class="btn bo bsm" onclick="searchEmpVehicle()">Search</button></div>
+        <div id="esr"><div style="text-align:center;color:var(--g400);padding:28px 0;font-size:12px;">Search plate to view employee info</div></div>
+      </div>
+      <div class="card" id="etoc" style="margin-top:13px;display:none;">
+        <div class="st">Time Out &amp; Duration</div>
+        <div class="tb">
+          <div class="tr2"><span class="trl">Time In</span><span class="trv" id="eoti">—</span></div>
+          <div class="tr2"><span class="trl">Time Out (Live)</span><span class="trv lv" id="elc">—</span></div>
+        </div>
+        <div class="db"><div class="dbl">Total Hours of Parking</div><div class="dbv"><span id="edh">0</span><span class="dbu">h </span><span id="edm">0</span><span class="dbu">m</span></div></div>
+        <div style="margin-bottom:12px;"><div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.4px;color:var(--g400);margin-bottom:4px;">Time and Date (Final)</div><div style="font-family:'Barlow Condensed',sans-serif;font-size:22px;font-weight:800;" id="efts">—</div></div>
+        <div class="br2">
+          <button class="btn bp" onclick="confirmEmpOut()"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12l5 5L20 7"/></svg>CONFIRM EXIT</button>
+          <button class="btn bda" onclick="clearEOut()">CANCEL</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- RECEIPT & PAYMENT -->
+<div class="page" id="page-receipt">
+  <div class="ph"><div class="pt">Receipt &amp; Payment Display</div><div class="ps">Parking fee: ₱30 first hour + ₱20 per succeeding hour · PWD/Senior: 20% discount</div></div>
+  <div class="tc2">
+    <div class="card">
+      <div class="st">Display for Receipt</div>
+      <div style="display:flex;gap:9px;margin-bottom:14px;"><input class="ins" id="rtkt" placeholder="Enter Ticket No..." style="flex:1;"/><button class="btn bo bsm" onclick="loadReceipt()">Load</button></div>
+      <div id="rra"><div style="text-align:center;color:var(--g400);padding:38px 0;font-size:12px;">Enter ticket number to load receipt</div></div>
+    </div>
+    <div class="card">
+      <div class="st">Payment Display</div>
+      <div id="rpa"><div style="text-align:center;color:var(--g400);padding:38px 0;font-size:12px;">Load a ticket to see payment breakdown</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- VEHICLES INFO SHEET -->
+<div class="page" id="page-vehicles">
+  <div class="ph"><div class="pt">Info Sheet of Vehicle Entries</div><div class="ps">All vehicle entries log</div></div>
+  <div class="card">
+    <div style="display:flex;gap:9px;margin-bottom:14px;align-items:center;flex-wrap:wrap;">
+      <input type="date" class="ins" id="vhd" style="width:165px;"/>
+      <select class="fs" id="vhf" style="width:155px;"><option value="all">All Entries</option><option value="employee">Employee</option><option value="visitor">Visitor</option><option value="parked">Parked</option><option value="exited">Exited</option></select>
+      <button class="btn bo bsm" onclick="loadVSheet()">Filter</button>
+      <span id="vhc" class="badge bg" style="margin-left:auto;">0 records</span>
+    </div>
+    <div style="overflow-x:auto;">
+      <table class="tbl2">
+        <thead><tr><th>Ticket No</th><th>Plate</th><th>Vehicle</th><th>Type</th><th>Employee</th><th>Time In</th><th>Time Out</th><th>Duration</th><th>Status</th></tr></thead>
+        <tbody id="vhb"><tr><td colspan="9" style="text-align:center;color:var(--g400);padding:28px;">Loading...</td></tr></tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- EXCEL REPORT -->
+<div class="page" id="page-excel">
+  <div class="ph"><div class="pt">Report of Vehicle Entries (Excel/CSV)</div><div class="ps">Generate and download daily parking reports</div></div>
+  <div class="te2">
+    <div class="card">
+      <div class="st">All Entries Report</div>
+      <div class="fg"><label class="fl">Select Date</label><input type="date" class="ins" id="exd"/></div>
+      <div class="al2 ok" id="exok"></div><div class="al2 er" id="exer"></div>
+      <button class="btn bp" onclick="genExcel()" style="margin-top:6px;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>GENERATE &amp; DOWNLOAD</button>
+    </div>
+    <div class="card">
+      <div class="st">Employee Entries Report</div>
+      <div class="fg"><label class="fl">Select Date</label><input type="date" class="ins" id="exed"/></div>
+      <div class="al2 ok" id="exeok"></div>
+      <button class="btn bbl" onclick="genEmpExcel()" style="width:100%;margin-top:6px;font-size:15px;padding:13px;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>EMPLOYEE REPORT</button>
+    </div>
+  </div>
+</div>
+
+<!-- EMPLOYEE PARKING INFO -->
+<div class="page" id="page-empinfo">
+  <div class="ph"><div class="pt">Info of Employee Parking Entry</div><div class="ps">View employee parking records and history</div></div>
+  <div class="card">
+    <div style="display:flex;gap:9px;margin-bottom:14px;"><input class="ins" id="eis" placeholder="Search by name, ID, or department..." style="flex:1;"/><button class="btn bo bsm" onclick="searchEmpInfo()">Search</button></div>
+    <div id="eil"><div style="text-align:center;color:var(--g400);padding:28px 0;font-size:12px;">Search an employee above</div></div>
+  </div>
+</div>
+
+<!-- ADMIN PANEL -->
+<div class="page" id="page-admin">
+  <div class="ph"><div class="pt">Admin Panel</div><div class="ps">Employee account management and system settings</div></div>
+  <div class="te2" style="margin-bottom:14px;">
+    <div class="card">
+      <div class="st">Create Employee Account</div>
+      <div class="fg"><label class="fl">Employee ID</label><input class="ins" id="aeid" placeholder="e.g. EMP-001"/></div>
+      <div class="fg"><label class="fl">Full Name</label><input class="ins" id="anm" placeholder="Dr. Juan dela Cruz"/></div>
+      <div class="te2">
+        <div class="fg"><label class="fl">Department</label><input class="ins" id="adp" placeholder="Cardiology"/></div>
+        <div class="fg"><label class="fl">Position</label><input class="ins" id="aps" placeholder="Doctor"/></div>
+      </div>
+      <div class="al2 ok" id="aeok"></div><div class="al2 er" id="aeer"></div>
+      <button class="btn bp" onclick="createEmp()" style="margin-top:4px;"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 5v14M5 12h14"/></svg>CREATE ACCOUNT</button>
+    </div>
+    <div>
+      <div class="card" style="margin-bottom:13px;">
+        <div class="st">Reset Employee Password</div>
+        <div class="fg"><label class="fl">Username</label><input class="ins" id="aru" placeholder="Guard username"/></div>
+        <div class="fg"><label class="fl">New Password</label><input class="ins" type="password" id="arp" placeholder="New password"/></div>
+        <div class="al2 ok" id="arok"></div><div class="al2 er" id="arer"></div>
+        <button class="btn bam" onclick="resetPass()" style="width:100%;margin-top:4px;"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 4v6h-6"/><path d="M1 20v-6h6"/><path d="M3.51 9a9 9 0 0114.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0020.49 15"/></svg>RESET PASSWORD</button>
+      </div>
+      <div class="card">
+        <div class="st">Reset Admin Password</div>
+        <div class="fg"><label class="fl">Current Password</label><input class="ins" type="password" id="aop" placeholder="Current password"/></div>
+        <div class="fg"><label class="fl">New Password</label><input class="ins" type="password" id="anp" placeholder="New password (min 8 chars)"/></div>
+        <div class="al2 ok" id="aaok"></div><div class="al2 er" id="aaer"></div>
+        <button class="btn bda" onclick="resetAdminPass()" style="width:100%;margin-top:4px;">RESET ADMIN PASSWORD</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+</div><!-- /main -->
+<div class="sb"><span><span class="sd"></span>System Connected</span><span>LAN Operation</span><span>FUMC IT Dept.</span><span style="margin-left:auto;color:rgba(255,255,255,.4);">₱30 first hr · ₱20 succeeding · 20% PWD/Senior discount</span></div>
+</div><!-- /app -->
+
+<!-- MODALS -->
+<div class="mov" id="mtkt">
+  <div class="mo" style="text-align:center;">
+    <div class="mic gn"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#1d6b44" stroke-width="2.5"><path d="M5 12l5 5L20 7"/></svg></div>
+    <div class="mot" style="text-align:center;">Ticket Generated!</div>
+    <div style="background:var(--gl);border-radius:10px;padding:14px;margin:10px 0;"><div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--gmi);margin-bottom:3px;">Ticket Number</div><div style="font-family:'Barlow Condensed',sans-serif;font-size:28px;font-weight:800;color:var(--gd);letter-spacing:2px;" id="mtn">—</div></div>
+    <div style="font-size:13px;color:var(--g600);margin-bottom:14px;" id="mti">—</div>
+    <button class="btn bp" onclick="cm('mtkt')">CLOSE</button>
+  </div>
+</div>
+<div class="mov" id="mpay">
+  <div class="mo"><div class="mot">Payment Summary</div><div id="mpc"></div><div class="br2"><button class="btn bp" onclick="cm('mpay')">CONFIRM PAID</button><button class="btn bo" onclick="cm('mpay')">CLOSE</button></div></div>
+</div>
+
+<script>
+const API='http://localhost/fumc_parking';
+let token=localStorage.getItem('fumc_token')||'';
+let vLogId=null,eLogId=null,vTI=null,eTI=null,eLI=null;
+const R1=30,RS=20,DISC=0.20;
+
+function calcAmt(mins,pwd,sen){
+  const hrs=Math.max(1,Math.ceil(mins/60));
+  const base=hrs<=1?R1:R1+(hrs-1)*RS;
+  const dp=(pwd||sen)?DISC:0;
+  const da=base*dp;
+  return{hrs,base,dp,da,total:base-da};
+}
+
+function updateClock(){
+  const n=new Date();
+  const t=n.toLocaleTimeString('en-PH',{hour:'2-digit',minute:'2-digit',second:'2-digit',hour12:true});
+  const d=n.toLocaleDateString('en-PH',{weekday:'short',month:'short',day:'numeric',year:'numeric'});
+  document.getElementById('ckt').textContent=t;
+  document.getElementById('ckd').textContent=d;
+  ['vtil','etil'].forEach(id=>{const el=document.getElementById(id);if(el)el.textContent=t;});
+  const dl=document.getElementById('edl');if(dl)dl.textContent=n.toLocaleDateString('en-PH');
+}
+setInterval(updateClock,1000);updateClock();
+
+async function doLogin(){
+  const u=document.getElementById('iu').value.trim();
+  const p=document.getElementById('ip').value;
+  const err=document.getElementById('lerr');
+  const btn=document.getElementById('bln');
+  err.style.display='none';
+  btn.innerHTML='<span class="sp"></span>Signing in...';btn.disabled=true;
+  try{
+    const r=await fetch(`${API}/test_login.php`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({username:u,password:p})});
+    const data=await r.json();
+    if(data.success){
+      token=data.token;
+      localStorage.setItem('fumc_token',token);
+      localStorage.setItem('fumc_user',JSON.stringify(data.user));
+      showApp(data.user);
+    }else{err.textContent=data.message||'Invalid credentials.';err.style.display='block';}
+  }catch(e){err.textContent='Cannot connect to server. Check if XAMPP is running.';err.style.display='block';}
+  btn.innerHTML='SIGN IN';btn.disabled=false;
+}
+document.addEventListener('DOMContentLoaded',()=>{
+  document.getElementById('ip').addEventListener('keypress',e=>{if(e.key==='Enter')doLogin();});
+  const t=new Date().toISOString().split('T')[0];
+  ['vhd','exd','exed'].forEach(id=>{const el=document.getElementById(id);if(el)el.value=t;});
+  const u=localStorage.getItem('fumc_user');
+  if(token&&u)showApp(JSON.parse(u));
+  genTktPreview();
+});
+
+function showApp(user){
+  document.getElementById('lp').classList.add('hidden');
+  document.getElementById('app').style.display='block';
+  const i=(user.full_name||user.username).split(' ').map(w=>w[0]).join('').toUpperCase().substring(0,2);
+  document.getElementById('gav').textContent=i;
+  document.getElementById('gnm').textContent=user.full_name||user.username;
+  loadVSheet();
+}
+function doLogout(){localStorage.removeItem('fumc_token');localStorage.removeItem('fumc_user');token='';document.getElementById('lp').classList.remove('hidden');document.getElementById('app').style.display='none';}
+
+function showPage(n){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.ni').forEach(x=>x.classList.remove('active'));
+  document.getElementById('page-'+n).classList.add('active');
+  document.getElementById('nav-'+n).classList.add('active');
+  if(n==='vehicles')loadVSheet();
+}
+function cm(id){document.getElementById(id).classList.remove('show');}
+function sm(id){document.getElementById(id).classList.add('show');}
+function al(id,msg,type='ok'){const el=document.getElementById(id);el.textContent=msg;el.className='al2 '+type;el.style.display='block';setTimeout(()=>el.style.display='none',5000);}
+
+function genTktPreview(){
+  const d=new Date();const pad=n=>String(n).padStart(2,'0');
+  document.getElementById('vtp').textContent=`TKT-${d.getFullYear()}${pad(d.getMonth()+1)}${pad(d.getDate())}-XXXXX`;
+}
+
+async function submitVisitor(){
+  const plate=document.getElementById('vpl').value.trim();
+  if(!plate){al('ver','Please enter a plate number or MV file.','er');return;}
+  try{
+    const r=await fetch(`${API}/vehicle-intake`,{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+token},body:JSON.stringify({license_plate:plate,vehicle_type:document.getElementById('vvt').value,entry_type:'visitor'})});
+    const data=await r.json();
+    if(data.success){
+      document.getElementById('mtn').textContent=data.ticket_number;
+      document.getElementById('mti').textContent=`${plate} — ${data.time_in}`;
+      sm('mtkt');document.getElementById('vpl').value='';genTktPreview();
+    }else{al('ver',data.message,'er');}
+  }catch(e){al('ver','Server error.','er');}
+}
+function clearV(){document.getElementById('vpl').value='';document.getElementById('vsr').innerHTML='<div style="text-align:center;color:var(--g400);padding:28px 0;font-size:12px;">Enter ticket number to search</div>';document.getElementById('vtoc').style.display='none';}
+
+async function searchTicket(){
+  const tk=document.getElementById('vst').value.trim();if(!tk)return;
+  try{
+    const r=await fetch(`${API}/vehicle-entries?status=parked`,{headers:{'Authorization':'Bearer '+token}});
+    const data=await r.json();
+    const found=data.data?.find(d=>d.ticket_number===tk);
+    const res=document.getElementById('vsr');const toc=document.getElementById('vtoc');
+    if(!found){res.innerHTML='<div style="color:var(--rd);font-size:13px;text-align:center;padding:18px;">Ticket not found or already exited.</div>';toc.style.display='none';return;}
+    vLogId=found.id;vTI=new Date(found.time_in);
+    res.innerHTML=`<div class="tb"><div class="tr2"><span class="trl">Plate No</span><span class="trv">${found.license_plate}</span></div><div class="tr2"><span class="trl">Date / Time In</span><span class="trv">${found.time_in}</span></div><div class="tr2"><span class="trl">Vehicle Type</span><span class="trv">${found.vehicle_type}</span></div><div class="tr2"><span class="trl">Time Out</span><span class="trv lv" id="vtolv">—</span></div></div>`;
+    toc.style.display='block';
+    document.getElementById('vfi').innerHTML=`<div style="font-size:13px;color:var(--g600);margin-bottom:8px;"><strong>${found.license_plate}</strong> — Time In: ${found.time_in}</div>`;
+    recalcPay();
+    setInterval(()=>{const el=document.getElementById('vtolv');if(el)el.textContent=new Date().toLocaleTimeString();},1000);
+  }catch(e){}
+}
+
+function recalcPay(){
+  if(!vTI)return;
+  const mins=Math.floor((new Date()-vTI)/60000);
+  const pwd=document.getElementById('vpwd')?.checked;
+  const sen=document.getElementById('vsen')?.checked;
+  const c=calcAmt(mins,pwd,sen);
+  const el=document.getElementById('vpaypreview');
+  if(el)el.innerHTML=`<div class="pb"><div class="pbl">Estimated Amount Due</div><div class="pba">₱${c.total.toFixed(2)}</div><div class="pbk">${c.hrs} hr(s) · ₱${R1} first + ₱${RS}×${Math.max(0,c.hrs-1)} succeeding${c.da>0?` · Discount: −₱${c.da.toFixed(2)}`:''}</div></div>`;
+}
+
+async function submitVisitorOut(){
+  if(!vLogId)return;
+  try{
+    const r=await fetch(`${API}/vehicle-exit`,{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+token},body:JSON.stringify({log_id:vLogId})});
+    const data=await r.json();
+    if(data.success){
+      const pwd=document.getElementById('vpwd')?.checked;const sen=document.getElementById('vsen')?.checked;
+      const mins=data.duration_hours*60+data.duration_minutes;
+      const pay=calcAmt(mins,pwd,sen);
+      document.getElementById('mpc').innerHTML=`<div class="pb"><div class="pbl">Amount Due</div><div class="pba">₱${pay.total.toFixed(2)}</div><div class="pbk">₱${R1} first hr + ₱${RS}×${Math.max(0,pay.hrs-1)} succeeding${pay.da>0?`<br><span style="color:var(--bl);">Discount (${(pay.dp*100).toFixed(0)}%): −₱${pay.da.toFixed(2)}</span>`:''}</div></div><div class="rb"><div class="rt">✚ FUMC PARKING RECEIPT</div><div class="rr"><span>Duration</span><span>${data.duration_hours}h ${data.duration_minutes}m</span></div><div class="rr"><span>Base Amount</span><span>₱${pay.base.toFixed(2)}</span></div>${pay.da>0?`<div class="rr"><span>Discount (${(pay.dp*100).toFixed(0)}%)</span><span>−₱${pay.da.toFixed(2)}</span></div>`:''}<div class="rtot"><span class="rtotl">TOTAL</span><span class="rtota">₱${pay.total.toFixed(2)}</span></div></div>`;
+      sm('mpay');document.getElementById('vtoc').style.display='none';document.getElementById('vsr').innerHTML='<div style="text-align:center;color:var(--g400);padding:28px 0;font-size:12px;">Ticket processed.</div>';document.getElementById('vst').value='';vLogId=null;vTI=null;
+    }
+  }catch(e){}
+}
+
+async function submitEmployee(){
+  const plate=document.getElementById('epl').value.trim();const empId=document.getElementById('eeid').value;
+  if(!plate){al('eer','Please enter a plate number.','er');return;}
+  if(!empId){al('eer','Please enter employee DB ID.','er');return;}
+  try{
+    const r=await fetch(`${API}/vehicle-intake`,{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+token},body:JSON.stringify({license_plate:plate,vehicle_type:document.getElementById('evt').value,entry_type:'employee',employee_id:parseInt(empId)})});
+    const data=await r.json();
+    if(data.success){document.getElementById('mtn').textContent=data.ticket_number;document.getElementById('mti').textContent=`${plate} — Employee — ${data.time_in}`;sm('mtkt');document.getElementById('epl').value='';document.getElementById('eeid').value='';}
+    else{al('eer',data.message,'er');}
+  }catch(e){al('eer','Server error.','er');}
+}
+function clearE(){document.getElementById('epl').value='';document.getElementById('eeid').value='';}
+
+async function searchEmpVehicle(){
+  const plate=document.getElementById('esp').value.trim();if(!plate)return;
+  try{
+    const r=await fetch(`${API}/vehicle-exit?license_plate=${encodeURIComponent(plate)}`,{headers:{'Authorization':'Bearer '+token}});
+    const data=await r.json();const res=document.getElementById('esr');const card=document.getElementById('etoc');
+    if(!data.success){res.innerHTML='<div style="color:var(--rd);font-size:13px;text-align:center;padding:18px;">Vehicle not found or already exited.</div>';card.style.display='none';return;}
+    const d=data.data;eLogId=d.log_id;eTI=new Date(d.time_in);
+    let eh='';
+    if(d.employee){const e=d.employee;const i=e.name.split(' ').map(w=>w[0]).join('').toUpperCase().substring(0,2);eh=`<div class="ec"><div class="eav">${i}</div><div><div class="en">${e.name}</div><div class="ei">ID: ${e.emp_no} · ${e.department||'FUMC'}</div></div></div>`;}
+    res.innerHTML=`${eh}<div class="tb"><div class="tr2"><span class="trl">Vehicle</span><span class="trv">${d.license_plate} — ${d.vehicle_type}</span></div><div class="tr2"><span class="trl">Time In</span><span class="trv">${d.time_in}</span></div></div>`;
+    card.style.display='block';document.getElementById('eoti').textContent=d.time_in;
+    if(eLI)clearInterval(eLI);
+    eLI=setInterval(()=>{
+      if(!eTI)return;const now=new Date();const diff=Math.floor((now-eTI)/1000);const h=Math.floor(diff/3600);const m=Math.floor((diff%3600)/60);
+      document.getElementById('elc').textContent=now.toLocaleTimeString();
+      document.getElementById('edh').textContent=h;document.getElementById('edm').textContent=m;
+      document.getElementById('efts').textContent=now.toLocaleDateString('en-PH')+' '+now.toLocaleTimeString();
+    },1000);
+  }catch(e){}
+}
+
+async function confirmEmpOut(){
+  if(!eLogId)return;if(eLI)clearInterval(eLI);
+  try{
+    const r=await fetch(`${API}/vehicle-exit`,{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+token},body:JSON.stringify({log_id:eLogId})});
+    const data=await r.json();
+    if(data.success){
+      const mins=data.duration_hours*60+data.duration_minutes;const pay=calcAmt(mins,false,false);
+      document.getElementById('mpc').innerHTML=`<div class="pb"><div class="pbl">Employee Parking Fee</div><div class="pba">₱${pay.total.toFixed(2)}</div><div class="pbk">${pay.hrs} hour(s) · Standard rate</div></div><div class="rb"><div class="rt">✚ FUMC EMPLOYEE PARKING</div><div class="rr"><span>Duration</span><span>${data.duration_hours}h ${data.duration_minutes}m</span></div><div class="rr"><span>Total Amount</span><span>₱${pay.total.toFixed(2)}</span></div><div class="rtot"><span class="rtotl">TOTAL</span><span class="rtota">₱${pay.total.toFixed(2)}</span></div></div>`;
+      sm('mpay');document.getElementById('etoc').style.display='none';eLogId=null;eTI=null;
+    }
+  }catch(e){}
+}
+function clearEOut(){if(eLI)clearInterval(eLI);document.getElementById('etoc').style.display='none';document.getElementById('esp').value='';document.getElementById('esr').innerHTML='<div style="text-align:center;color:var(--g400);padding:28px 0;font-size:12px;">Search plate to view employee info</div>';eLogId=null;eTI=null;}
+
+async function loadReceipt(){
+  const tk=document.getElementById('rtkt').value.trim();if(!tk)return;
+  try{
+    const r=await fetch(`${API}/vehicle-entries?status=all`,{headers:{'Authorization':'Bearer '+token}});
+    const data=await r.json();const found=data.data?.find(d=>d.ticket_number===tk);
+    if(!found){document.getElementById('rra').innerHTML='<div style="color:var(--rd);font-size:13px;">Ticket not found.</div>';document.getElementById('rpa').innerHTML='';return;}
+    const mins=found.duration_minutes||Math.floor((new Date()-new Date(found.time_in))/60000);
+    const pay=calcAmt(mins,false,false);
+    document.getElementById('rra').innerHTML=`<div class="rb"><div class="rt">✚ FUMC PARKING RECEIPT</div><div class="rr"><span>Ticket No</span><span>${found.ticket_number}</span></div><div class="rr"><span>Plate No</span><span>${found.license_plate}</span></div><div class="rr"><span>Entry Type</span><span>${found.entry_type}</span></div><div class="rr"><span>Time In</span><span>${found.time_in||'—'}</span></div><div class="rr"><span>Time Out</span><span>${found.time_out||'Still Parked'}</span></div><div class="rr"><span>Total Hours</span><span>${pay.hrs} hr(s)</span></div><div class="rtot"><span class="rtotl">TOTAL AMOUNT</span><span class="rtota">₱${pay.total.toFixed(2)}</span></div></div>`;
+    document.getElementById('rpa').innerHTML=`<div class="pb"><div class="pbl">Amount Due</div><div class="pba">₱${pay.base.toFixed(2)}</div><div class="pbk">₱${R1} first hour + ₱${RS} × ${Math.max(0,pay.hrs-1)} succeeding hour(s)</div></div><div class="pbd"><strong>PWD / Senior Discount (20%)</strong><br/>Discounted Amount: ₱${(pay.base*DISC).toFixed(2)}<br/>Net Total with Discount: ₱${(pay.base*(1-DISC)).toFixed(2)}</div>`;
+  }catch(e){}
+}
+
+async function loadVSheet(){
+  const date=document.getElementById('vhd')?.value||new Date().toISOString().split('T')[0];
+  const filter=document.getElementById('vhf')?.value||'all';
+  const status=['parked','exited'].includes(filter)?filter:'all';
+  const type=['employee','visitor'].includes(filter)?filter:'';
+  try{
+    let url=`${API}/vehicle-entries?date=${date}&status=${status}`;if(type)url+=`&type=${type}`;
+    const r=await fetch(url,{headers:{'Authorization':'Bearer '+token}});const data=await r.json();
+    const tb=document.getElementById('vhb');
+    document.getElementById('vhc').textContent=`${data.count||0} records`;
+    if(!data.data?.length){tb.innerHTML='<tr><td colspan="9" style="text-align:center;color:var(--g400);padding:28px;">No records found.</td></tr>';return;}
+    tb.innerHTML=data.data.map(r=>`<tr><td><span class="badge bg" style="font-size:9px;">${r.ticket_number||'—'}</span></td><td><strong>${r.license_plate}</strong></td><td>${r.vehicle_type||'—'}</td><td><span class="badge ${r.entry_type==='employee'?'bbl2':'bam2'}">${r.entry_type}</span></td><td>${r.employee_name||'—'}</td><td style="font-size:11px;">${r.time_in||'—'}</td><td style="font-size:11px;">${r.time_out||'—'}</td><td>${r.duration_minutes?Math.floor(r.duration_minutes/60)+'h '+r.duration_minutes%60+'m':'—'}</td><td><span class="badge ${r.status==='parked'?'bg':r.status==='exited'?'bgr':'brd'}">${r.status}</span></td></tr>`).join('');
+  }catch(e){}
+}
+
+async function genExcel(){
+  const date=document.getElementById('exd').value;
+  try{
+    const r=await fetch(`${API}/export-excel`,{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+token},body:JSON.stringify({date})});
+    const data=await r.json();
+    if(data.success){al('exok',`Report generated! ${data.record_count} records — ${data.filename}`);window.open(`${API}/${data.download_url}`,'_blank');}
+    else{al('exer',data.message,'er');}
+  }catch(e){al('exer','Server error.','er');}
+}
+async function genEmpExcel(){
+  const date=document.getElementById('exed').value;
+  try{
+    const r=await fetch(`${API}/vehicle-entries?date=${date}&type=employee&status=all`,{headers:{'Authorization':'Bearer '+token}});
+    const data=await r.json();
+    if(data.success)al('exeok',`Found ${data.count} employee entries for ${date}`);
+  }catch(e){}
+}
+
+async function searchEmpInfo(){
+  const q=document.getElementById('eis').value.trim();if(!q)return;
+  try{
+    const r=await fetch(`${API}/employees?search=${encodeURIComponent(q)}&is_active=all`,{headers:{'Authorization':'Bearer '+token}});
+    const data=await r.json();const el=document.getElementById('eil');
+    if(!data.data?.length){el.innerHTML='<div style="color:var(--g400);font-size:13px;text-align:center;padding:18px;">No employees found.</div>';return;}
+    el.innerHTML=data.data.map(e=>{const i=e.full_name.split(' ').map(w=>w[0]).join('').toUpperCase().substring(0,2);return`<div style="display:flex;align-items:center;gap:12px;padding:13px 0;border-bottom:1px solid var(--g200);"><div style="width:42px;height:42px;border-radius:50%;background:var(--gl);display:flex;align-items:center;justify-content:center;font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:15px;color:var(--gd);flex-shrink:0;">${i}</div><div style="flex:1;"><div style="font-weight:700;font-size:14px;">${e.full_name}</div><div style="font-size:11px;color:var(--g400);">ID: ${e.employee_id} · ${e.department||'—'} · ${e.position||'—'}</div></div><span class="badge ${e.is_active?'bg':'bgr'}">${e.is_active?'Active':'Inactive'}</span></div>`;}).join('');
+  }catch(e){}
+}
+
+async function createEmp(){
+  const body={employee_id:document.getElementById('aeid').value.trim(),full_name:document.getElementById('anm').value.trim(),department:document.getElementById('adp').value.trim(),position:document.getElementById('aps').value.trim()};
+  if(!body.employee_id||!body.full_name){al('aeer','Employee ID and full name are required.','er');return;}
+  try{
+    const r=await fetch(`${API}/employees`,{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+token},body:JSON.stringify(body)});
+    const data=await r.json();
+    if(data.success){al('aeok','Employee account created successfully!');['aeid','anm','adp','aps'].forEach(id=>document.getElementById(id).value='');}
+    else{al('aeer',data.message,'er');}
+  }catch(e){al('aeer','Server error.','er');}
+}
+
+function resetPass(){const u=document.getElementById('aru').value.trim();const p=document.getElementById('arp').value;if(!u||!p){al('arer','Username and new password required.','er');return;}al('arok','Connect reset endpoint to your API for full functionality.');}
+
+async function resetAdminPass(){
+  const op=document.getElementById('aop').value;const np=document.getElementById('anp').value;
+  if(!op||!np){al('aaer','Both fields required.','er');return;}
+  if(np.length<8){al('aaer','New password must be at least 8 characters.','er');return;}
+  try{
+    const r=await fetch(`${API}/change-password`,{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+token},body:JSON.stringify({old_password:op,new_password:np})});
+    const data=await r.json();
+    if(data.success){al('aaok','Admin password changed successfully!');document.getElementById('aop').value='';document.getElementById('anp').value='';}
+    else{al('aaer',data.message,'er');}
+  }catch(e){al('aaer','Server error.','er');}
+}
+</script>
+</body>
+</html>

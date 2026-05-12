@@ -1,0 +1,25 @@
+﻿
+"FATIMA UNIVERSITY MEDICAL CENTER"
+"PARKING MANAGEMENT OFFICE"
+"GATE PASS LOG — VEHICLE EXIT RECORD"
+
+"Date:      2026-04-19"
+"Generated: 2026-04-21 16:46:17"
+"Prepared By: SYSTEM ADMINISTRATOR"
+
+NO.,"GATE PASS NO.","GUARD ON DUTY","TICKET NO.","PLATE NO.","VEHICLE TYPE","ENTRY TYPE","EMPLOYEE NAME","EMPLOYEE ID",DEPARTMENT,"TIME IN","TIME OUT","GATE PASS ISSUED AT","TOTAL HOURS","BASE FEE (P)","SUCCEEDING (P)","TOTAL AMOUNT (P)",REMARKS
+1,GP-20260419-0001,"SYSTEM ADMINISTRATOR",TKT-20260419-C73A8,"ABC 1234",Car,EMPLOYEE,"KOBE BRYANT L. JABALLA",12345,CARDIOLOGY,"2026-04-19 18:19:38","2026-04-19 18:54:55","2026-04-19 18:54:55",1,30,—,30,
+,,"TOTAL — 1 GATE PASSES",,,,,,,,,,,,,,30,
+
+"GATE PASS SUMMARY"
+
+"Total Gate Passes Issued",1
+"Employee Gate Passes",1
+"Visitor Gate Passes",0
+"Total Revenue Collected (P)",30
+
+
+"Prepared by:",,,,"Noted by:"
+
+___________________________,,,,___________________________
+"Guard on Duty / Encoder",,,,"Parking Officer-in-Charge"
